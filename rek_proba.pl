@@ -72,19 +72,19 @@ write_deser_list.
 
 read_deser(KName) :-
     repeat,
-    write('Wybierz danie na slodko z listy'), nl,
+    write('Wybierz deser z listy'), nl,
     write_deser_list,
     read(KNumber),
     (   deser(KNumber, KName)
-    ->  write('Wybrales danie na sodko: '), write(KName), nl, !
+    ->  write('Wybrales danie na slodko: '), write(KName), nl, !
     ;   write('Niepoprawny wybor, sproboj ponownie...'), nl, fail
     ).
 
 
 wybrano_obiad_deser(obiad) :- write('Czy masz ochote na slone? (T/N)'),
                               nl, 
-                              A is get_slone(Resp2),
-                              wybrano_slodkie_slone(A).
+                              get_slone(Resp2),
+                              wybrano_slodkie_slone(Resp2).
                                 
 
 wybrano_obiad_deser(deser) :- write('Wybierz deser: '), 
@@ -108,15 +108,16 @@ getByIndex([X], 1, X).
 getByIndex([H|_], 1, H).
 getByIndex([_|T], I, E) :- NewIndex is I-1, getByIndex(T, NewIndex, E).
 
-
+rozpocznij_zamowienie :- write('Wolisz obiad czy deser? (O/D)'),
+                         nl,
+                         get_obiad_deser(Resp1), 
+                         wybrano_obiad_deser(Resp1).
 
 start :- 
     write('Ten program pomaga Ci zamowic jedzenie na ktore masz ochote.'),nl,
     write('Na pytania o wybor to lub to odpowiadaj pierwsza litera wybranej opcji.'),nl,
     write('Czasem bedziesz poproszony o wskazanie elementu z listy, podaj jego index (numerowane od 1)'),nl,nl,
-    write('Wolisz obiad czy deser? (O/D)'),
-    nl,
-    A is get_obiad_deser(Resp1),
-    wybrano_obiad_deser(A).
+    Lista_zamowien
+    rozpocznij_zamowienie.
     
 

@@ -35,15 +35,15 @@ get_obiad_deser(Result) :- nl,
 
 %------------------------------------------------------------------------                            
 
-get_slone(Result) :- get(Char),              % read a character
+get_answer(Result) :- get(Char),              % read a character
                      get0(_),                % consume the Return after it
                      interpret2(Char,Result),
                      !.                      % cut -- see text
 
-get_slone(Result) :- nl,
-                     write('Odpowiedz, czy chcesz slone danie (T/N)'),
+get_answer(Result) :- nl,
+                     write('Odpowiedz, tak lub nie (T/N)'),
                      nl,
-                     get_slone(Result).
+                     get_answer(Result).
 
 %------------------------------------------------------------------------
 
@@ -79,7 +79,7 @@ read_slodki_obiad(KName) :-
     write_slodki_obiad_list,
     read(KNumber),
     (   slodki_obiad(KNumber, KName)
-    ->  write('Wybrales danie na sodko: '), write(KName), nl, !
+    ->  write('Wybrales danie na slodko: '), write(KName), nl, add(KName), !
     ;   write('Niepoprawny wybor, sproboj ponownie...'), nl, fail
     ).
 %------------------------------------------------------------------------
@@ -92,11 +92,11 @@ write_deser_list.
 
 read_deser(KName) :-
     repeat,
-    write('Wybierz danie na slodko z listy'), nl,
+    write('Wybierz deser z listy'), nl,
     write_deser_list,
     read(KNumber),
     (   deser(KNumber, KName)
-    ->  write('Wybrales danie na sodko: '), write(KName), nl, !
+    ->  write('Wybrales deser: '), write(KName), nl, add(KName), !
     ;   write('Niepoprawny wybor, sproboj ponownie...'), nl, fail
     ).
 
@@ -113,7 +113,7 @@ read_polska(KName) :-
     write_polska_list,
     read(KNumber),
     (   kuchnia_polska(KNumber, KName)
-    ->  write('Wybrales danie: '), write(KName), nl, !
+    ->  write('Wybrales danie: '), write(KName), nl, add(KName), !
     ;   write('Niepoprawny wybor, sproboj ponownie...'), nl, fail
     ).
 
@@ -131,7 +131,7 @@ read_amerykanska(KName) :-
     write_amerykanska_list,
     read(KNumber),
     (   kuchnia_amerykanska(KNumber, KName)
-    ->  write('Wybrales danie: '), write(KName), nl, !
+    ->  write('Wybrales danie: '), write(KName), nl, add(KName), !
     ;   write('Niepoprawny wybor, sproboj ponownie...'), nl, fail
     ).
 
@@ -149,7 +149,7 @@ read_azjatycka(KName) :-
     write_azjatycka_list,
     read(KNumber),
     (   kuchnia_azjatycka(KNumber, KName)
-    ->  write('Wybrales danie: '), write(KName), nl, !
+    ->  write('Wybrales danie: '), write(KName), nl, add(KName), !
     ;   write('Niepoprawny wybor, sproboj ponownie...'), nl, fail
     ).
 
@@ -166,7 +166,7 @@ read_wloska(KName) :-
     write_wloska_list,
     read(KNumber),
     (   kuchnia_wloska(KNumber, KName)
-    ->  write('Wybrales danie: '), write(KName), nl, !
+    ->  write('Wybrales danie: '), write(KName), nl, add(KName), !
     ;   write('Niepoprawny wybor, sproboj ponownie...'), nl, fail
     ).
 
@@ -174,7 +174,7 @@ read_wloska(KName) :-
 
 wybrano_obiad_deser(obiad) :- write('Czy masz ochote na slone? (T/N)'),
                               nl, 
-                              get_slone(Resp2),
+                              get_answer(Resp2),
                               wybrano_slodkie_slone(Resp2).
                                 
 
@@ -206,16 +206,30 @@ interpret2(116,tak). % ASCII 121 = 't'
 interpret2(78,nie).   % ASCII 78  = 'N'
 interpret2(110,nie).  % ASCII 110 = 'n'
 
+rozpocznij_zamowienie :- write('Wolisz obiad czy deser? (O/D)'),
+                         nl,
+                         get_obiad_deser(Resp1), 
+                         wybrano_obiad_deser(Resp1).
+domawianie :- write('Czy chcesz cos domowic? (T/N)'),
+              nl,
+              get_answer(Resp3),
+              domow(Resp3).
 
+add(Element) :- nb_getval(l, Lista_zamowien), append(Lista_zamowien, [Element], NewL), nb_setval(l, NewL).
+domow(tak) :- procedura.
+domow(nie) :- nb_getval(l, Lista_zamowien),
+              nl, 
+              write('Twoja lista zamowien: '), nl,
+              print(Lista_zamowien).
 
-
+procedura :- rozpocznij_zamowienie, domawianie.
 
 start :- 
     write('Ten program pomaga Ci zamowic jedzenie na ktore masz ochote.'),nl,
     write('Na pytania o wybor to lub to odpowiadaj pierwsza litera wybranej opcji.'),nl,
     write('Czasem bedziesz poproszony o wskazanie elementu z listy, podaj jego index (numerowane od 1)'),nl,nl,
-    write('Wolisz obiad czy deser? (O/D)'),
-    nl,
-    get_obiad_deser(Result1),
-    wybrano_obiad_deser(Result1).
+    nb_setval(l, []),
+    procedura,
+    write('Dziekujemy za zlozenie zamowienia').
+
     
