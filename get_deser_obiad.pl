@@ -4,7 +4,7 @@ get_obiad_deser(Result) :- get(Char),              % read a character
                             !.                      % cut -- see text
 
 get_obiad_deser(Result) :- nl,
-                         write('Chcesz zamówić obiad czy deser?'),
+                         write('Chcesz zamowic obiad czy deser?'),
                          get_obiad_deser(Result).
 
 interpret(68,deser).  % ASCII 89  = 'D'

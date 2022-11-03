@@ -8,7 +8,7 @@
 % File CAR.PL
 % Simple automotive expert system
 
-:- consult('getyesno.pl').  % Use ensure_loaded if available.
+:- consult('getyesno2.pl').  % Use ensure_loaded if available.
 
 %
 % Main control procedures
